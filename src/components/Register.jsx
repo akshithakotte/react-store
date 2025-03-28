@@ -1,58 +1,49 @@
+import React from "react";
+import { useState } from "react";
 import "./Register.css";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-
-export default function Login() {
-  const [users, setUsers] = useState([]); 
-  const [user, setUser] = useState({});
-  const [error, setError] = useState(""); 
-
+import { useContext } from "react";
+import { appContext } from "../App";
+export default function Register() {
+  const { user, setUser, users, setUsers } = useContext(appContext);
+  const [msg, setMsg] = useState();
   const handleSubmit = () => {
-    const userExist = users.some((existingUser) => existingUser.email === user.email);
-    if (userExist) {
-      setError("User already exists with this email");
-    } else if (user.name && user.email && user.password) {
-      setUsers([...users, user]);
-      setUser({});
-      setError(""); 
+    const found = users.find((value) => value.email === user.email);
+    if (found) {
+      setMsg("User already exists");
     } else {
-      setError("All fields are required");
+      setUsers([...users, user]);
+      setMsg();
     }
   };
-
-  const deleteItem = (email) => {
-    const updatedUsers = users.filter((ele) => ele.email !== email);
-    setUsers(updatedUsers);
+  const handleDelete = (email) => {
+    setUsers(users.filter((value) => value.email !== email));
   };
-
   return (
     <div className="App-Register-Row">
       <div>
-        <h3>Registration Form</h3>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <h2>Registration Form</h2>
+        {msg}
         <p>
           <input
             type="text"
-            value={user.name || ""}
-            placeholder="Name"
+            placeholder="Enter name"
             onChange={(e) => setUser({ ...user, name: e.target.value })}
-          />
+          ></input>
         </p>
         <p>
           <input
-            type="email"
-            value={user.email || ""}
-            placeholder="Email"
+            type="text"
+            placeholder="Email address"
             onChange={(e) => setUser({ ...user, email: e.target.value })}
-          />
+          ></input>
         </p>
         <p>
           <input
             type="password"
-            value={user.password || ""}
-            placeholder="Password"
+            placeholder="New password"
             onChange={(e) => setUser({ ...user, password: e.target.value })}
-          />
+          ></input>
         </p>
         <p>
           <button onClick={handleSubmit}>Submit</button>
@@ -62,29 +53,13 @@ export default function Login() {
         </p>
       </div>
       <div>
-        <h4>Registered People</h4>
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Password</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((value, index) => (
-              <tr key={index}>
-                <td>{value.name}</td>
-                <td>{value.email}</td>
-                <td>{value.password}</td>
-                <td>
-                  <button onClick={() => deleteItem(value.email)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {users &&
+          users.map((value, index) => (
+            <li>
+              {value.name}-{value.email}-{value.password}
+              <button onClick={() => handleDelete(value.email)}>Delete</button>
+            </li>
+          ))}
       </div>
     </div>
   );
