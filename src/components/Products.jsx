@@ -3,23 +3,39 @@ import "./Products.css";
 import { appContext } from "../App";
 import { useContext } from "react";
 export default function Products() {
-  const { user,products, cart, setCart } = useContext(appContext);
+  const { user, products, cart, setCart } = useContext(appContext);
   const addToCart = (id) => {
-    setCart({...cart, [id]:1});
+    !cart[id] && setCart({ ...cart, [id]: 1 });
   };
-  return(
-  <>
-    <h3>Hello {user?.name || "Guest"} !!!</h3>
-    <div className="App-Products-Row">
-      {products.map((value, index) => (
-        <div key={index} className="App-Products-Box">
-          <h3>{value.name}</h3>
-          <h4>{value.price}</h4>
-          <button onClick={() => addToCart(value.id)}>Add to Cart</button>
-        </div>
-      ))}
-    </div>
-    ;
-  </>
-  )
+  const increment = (id) => {
+    setCart({ ...cart, [id]: cart[id] + 1 });
+  };
+  const decrement = (id) => {
+    setCart({ ...cart, [id]: cart[id] - 1 });
+  };
+  return (
+    <>
+      <h3>{user.name}</h3>
+      <div className="App-Products-Row">
+        {products.map((value, index) => (
+          <div key={index} className="App-Products-Box">
+            <img src={value.imgUrl} />
+            <h3>{value.name}</h3>
+            <p>{value.desc}</p>
+            <h4>{value.price}</h4>
+            {cart[value.id] > 0 ? (
+              <div>
+                <button onClick={() => decrement(value.id)}>-</button>
+                {cart[value.id]}
+                <button onClick={() => increment(value.id)}>+</button>
+              </div>
+            ) : (
+              <button onClick={() => addToCart(value.id)}>Add to Cart</button>
+            )}
+          </div>
+        ))}
+      </div>
+      ;
+    </>
+  );
 }

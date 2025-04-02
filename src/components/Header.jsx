@@ -8,7 +8,7 @@ export default function Header() {
   console.log(items);
   return (
     <div className="App-Header-Row">
-      <div>React Store</div>
+      <h2>React Store</h2>
       <div>
         <Link to={"/"}>Home</Link>-
         <Link to={"/cart"}>Cart({items.length})</Link>-
