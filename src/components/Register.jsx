@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { appContext } from "../App";
 export default function Register() {
-  const { user, setUser, users, setUsers } = useContext(appContext);
+  const { user, setUser, users, setUsers,cart } = useContext(appContext);
   const [msg, setMsg] = useState();
   const Navigate = useNavigate();
   const handleSubmit = () => {
@@ -15,7 +15,7 @@ export default function Register() {
     } else {
       setUsers([...users, user]);
       setMsg();
-      Navigate("/");
+      Object.keys(cart).length > 0 ? Navigate("/cart") : Navigate("/");
     }
   };
   const handleDelete = (email) => {
